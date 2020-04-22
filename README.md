@@ -9,7 +9,7 @@
 Это дает вам возможность анализировать любой набор данных, используя возможности поиска / агрегирования Elasticsearch и возможности визуализации Kibana.
 
 > :information_source: Образы Docker, поддерживающие этот стек, включают [Stack Features][stack-features] (formerly X-Pack)
-с [платными функциями][paid-features] включенными по умолчанию (см. [Как отключить платные функции](#how-to-disable-paid-features) чтобы отключить их). [Пробная лицензия][trial-license] действительна в течение 30 дней.
+с [платными функциями][paid-features] включенными по умолчанию (см. [Как отключить платные функции](#как-отключить-платные-функции) чтобы отключить их). [Пробная лицензия][trial-license] действительна в течение 30 дней.
 
 Основано на официальных образах Docker - Elastic:
 
@@ -24,34 +24,36 @@
 ## Содержание
 
 1. [Требования](#requirements)
-   * [Настройка хоста](#host-setup)
+   * [Настройка хоста](#настройка-хоста)
    * [SELinux](#selinux)
    * [Docker for Desktop](#docker-for-desktop)
      * [Windows](#windows)
      * [macOS](#macos)
-2. [Использование](#usage)
-   * [Выбор версии](#version-selection)
-   * [Поднятие стека](#bringing-up-the-stack)
-   * [Cleanup](#cleanup)
-   * [Начальная настройка](#initial-setup)
-     * [Настройка аутентификации пользователя](#setting-up-user-authentication)
-     * [Внедрение данных](#injecting-data)
-     * [Создание шаблона индекса Kibana по умолчанию](#default-kibana-index-pattern-creation)
-3. [Конфигурации](#configuration)
-   * [Как настроить Elasticsearch](#how-to-configure-elasticsearch)
-   * [Как настроить Kibana](#how-to-configure-kibana)
-   * [Как настроить Logstash](#how-to-configure-logstash)
-   * [Как отключить платные функции](#how-to-disable-paid-features)
-   * [Как масштабировать кластер Elasticsearch](#how-to-scale-out-the-elasticsearch-cluster)
-4. [Расширения](#extensibility)
-   * [Как добавить плагины](#how-to-add-plugins)
-   * [Как включить предоставленные расширения](#how-to-enable-the-provided-extensions)
-5. [JVM настройка](#jvm-tuning)
-   * [Как указать объем памяти, используемой сервисом](#how-to-specify-the-amount-of-memory-used-by-a-service)
-   * [Как включить удаленное соединение JMX с сервисом](#how-to-enable-a-remote-jmx-connection-to-a-service)
-6. [Идем дальше](#going-further)
-   * [Плагины и интеграции](#plugins-and-integrations)
+2. [Использование](#использование)
+   * [Выбор версии](#выбор-версии)
+   * [Поднятие стека](#поднятие-стека)
+   * [Очистка](#очистка)
+   * [Начальная настройка](#начальная-настройка)
+     * [Настройка аутентификации пользователя](#настройка-аутентификации-пользователя)
+     * [Внедрение данных](#внедрение-данных)
+     * [Создание шаблона индекса Kibana по умолчанию](#создание-kibana-index-pattern-по-умолчанию)
+3. [Конфигурации](#конфигурации)
+   * [Как настроить Elasticsearch](#как-настроить-elasticsearch)
+   * [Как настроить Kibana](#как-настроить-kibana)
+   * [Как настроить Logstash](#как-настроить-logstash)
+   * [Как отключить платные функции](#как-отключить-платные-функции)
+   * [Как масштабировать кластер Elasticsearch](#как-масштабировать-кластер-elasticsearch)
+4. [Расширения](#расширения)
+   * [Как добавить плагины](#как-добавить-плагины)
+   * [Как включить предоставленные расширения](#как-включить-предоставленные-расширения)
+5. [JVM tuning](#jvm-tuning)
+   * [Как указать объем памяти используемой сервисом](#как-указать-объем-памяти-используемой-сервисом)
+   * [Как включить удаленное соединение JMX с сервисом](#как-включить-удаленное-соединение-JMX-с-сервисом)
+6. [Идем дальше](#идем-дальше)
+   * [Плагины и интеграции](#плагины-и-интеграции)
    * [Swarm mode](#swarm-mode)
+7. [Запись Django логов в ELK](#запись-django-логов-в-elk)
+8. [Запись Nginx логов в ELK](#запись-nginx-логов-в-elk)
 
 ## Requirements
 
@@ -96,7 +98,7 @@ $ chcon -R system_u:object_r:admin_home_t:s0 docker-elk/
 исключительно. Убедитесь, что хранилище клонировано в одном из этих мест, или следуйте инструкциям
 [документации][mac-mounts] чтобы добавить больше мест.
 
-## Usage
+## Использование
 
 ### Выбор версии
 
@@ -312,7 +314,7 @@ settings][trial-license]).
 
 ## JVM tuning
 
-### Как указать объем памяти, используемой сервисом
+### Как указать объем памяти используемой сервисом
 
 By default, both Elasticsearch and Logstash start with [1/4 of the total host
 memory](https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/parallel.html#default_heap_size) allocated to
@@ -418,9 +420,8 @@ $ docker stack services elk
 
 [swarm-mode]: https://docs.docker.com/engine/swarm/
 
-================================================================================================
 
-### Запись Django логов в ELK
+## Запись Django логов в ELK
 
 Для взаимодействия `Django` с сервисом `Logstash` установите дополнительный пакет `Python-logstash`.
 
@@ -480,7 +481,8 @@ def test_view(request, arg1, arg):
         logger.error('Something went wrong!')
 ```
 
-### Запись Nginx логов в ELK
+
+## Запись Nginx логов в ELK
 
 Для работы с nginx логами потребуется дополнительный сервис `Filebeat`.
 
