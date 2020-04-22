@@ -1,0 +1,45 @@
+filebeat.inputs:
+    type: log
+    enabled: true
+    paths:
+        - /var/log/nginx/*.log
+    fields:
+        type: nginx
+    fields_under_root: true
+    scan_frequency: 5s
+
+output.logstash:
+    enabled: true
+    hosts: ["logstash:5000"]
+
+# output.elasticsearch:
+#   hosts: ["http://elasticsearch:9200"]
+#   username: "elastic"
+#   password: "changeme"
+
+setup.kibana:
+    host: "http://0.0.0.0:5601"
+    username: "elastic"
+    password: "changeme"
+
+
+# filebeat.autodiscover:
+#   providers:
+#     - type: docker
+#       templates:
+#         - condition:
+#             contains:
+#               docker.container.image: chariot-colonial-docker.jfrog.io/colonial/ngb/nginx-master
+#           config:
+#             - type: docker
+#               containers.ids:
+#                 - "${data.docker.container.id}"
+#             - module: nginx
+#               access:
+#                 enabled: true
+#                 containers:
+#                     stream: "stdout"
+#               error:
+#                 enabled: true
+#                 containers:
+#                     stream: "stderr"

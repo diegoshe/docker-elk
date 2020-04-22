@@ -1,6 +1,7 @@
-version: '3.2'
+version: "3.2"
 
 services:
+  #Elasticsearch container
   elasticsearch:
     build:
       context: elasticsearch/
@@ -25,7 +26,8 @@ services:
       discovery.type: single-node
     networks:
       - elk
-
+  
+  #Logstash container
   logstash:
     build:
       context: logstash/
@@ -51,6 +53,7 @@ services:
     depends_on:
       - elasticsearch
 
+  #Kibana container
   kibana:
     build:
       context: kibana/
@@ -67,6 +70,21 @@ services:
       - elk
     depends_on:
       - elasticsearch
+  
+  #Filebeat container
+  filebeat:
+    build: ./filebeat
+    entrypoint: "filebeat -e -strict.perms=false"
+    volumes:
+      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - ../project1/nginx/logs:/var/log/nginx
+    networks:
+      - elk
+    depends_on:
+      - logstash
+      - elasticsearch
+      - kibana
+    restart: unless-stopped
 
 networks:
   elk:
